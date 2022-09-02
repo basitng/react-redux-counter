@@ -1,52 +1,80 @@
-import React from "react";
-import { AddOutlined, RemoveOutlined } from "@mui/icons-material";
-import { Button, IconButton, TextField, Typography } from "@mui/material";
-import { useSelector, useDispatch } from "react-redux";
-import { increment, decrement, incrementByAmount, reset } from "./counterSlice";
+import { Add, Remove, Restore } from "@mui/icons-material";
+import { Button, ButtonGroup, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  decrement,
+  decrementByValue,
+  increment,
+  incrementByValue,
+  reset,
+} from "./counterSlice";
 
 export default function Counter() {
-  const counter = useSelector((state) => state.counter.count);
-  const [incrementAmount, setincrementAmount] = React.useState("");
+  const [number, setNumber] = React.useState(0);
+  const state = useSelector((state) => state.counter.count);
   const dispatch = useDispatch();
-  const addValue = Number(incrementAmount) || 0;
+  const isNum = Number(number) || 0;
+  const focusRef = React.useRef().current;
 
-  const resetAll = () => {
-    setincrementAmount(0);
-    dispatch(reset());
-  };
   return (
-    <React.Fragment>
-      <Box>
-        <Typography variant="h3">{counter}</Typography>
-        <Box sx={{ display: "flex" }}>
-          <IconButton onClick={() => dispatch(increment())}>
-            <AddOutlined />
-          </IconButton>
-          <IconButton onClick={() => dispatch(decrement())}>
-            <RemoveOutlined />
-          </IconButton>
-        </Box>
-      </Box>
-      <Box>
-        <TextField
-          variant="filled"
-          label="Set amount"
-          value={incrementAmount}
-          onChange={(e) => setincrementAmount(e.target.value)}
-        />
+    <Box sx={{ height: "100vh", display: "grid", placeContent: "center" }}>
+      <Typography variant="h2" align="center">
+        {state}
+      </Typography>
+      <TextField
+        value={number}
+        onChange={(e) => setNumber(e.target.value)}
+        ref={focusRef}
+        variant="filled"
+        label="Add Value"
+      />
+
+      <ButtonGroup sx={{ mt: 4 }}>
         <Button
-          onClick={() => dispatch(incrementByAmount(addValue))}
-          sx={{ m: 1 }}
+          onClick={() => dispatch(increment())}
           disableElevation
           variant="contained"
+          startIcon={<Add />}
         >
-          Add amount
-        </Button>{" "}
-        <Button onClick={resetAll} disableElevation variant="outlined">
-          Reset Count
+          Increment
         </Button>
-      </Box>
-    </React.Fragment>
+        <Button
+          onClick={() => dispatch(decrement())}
+          disableElevation
+          variant="contained"
+          startIcon={<Remove />}
+        >
+          Decrement
+        </Button>
+        <Button
+          onClick={() => dispatch(reset())}
+          disableElevation
+          variant="contained"
+          startIcon={<Restore />}
+        >
+          Reset
+        </Button>
+      </ButtonGroup>
+      <ButtonGroup sx={{ mt: 4 }}>
+        <Button
+          onClick={() => dispatch(incrementByValue(isNum))}
+          disableElevation
+          variant="contained"
+          startIcon={<Add />}
+        >
+          Add by {isNum}
+        </Button>
+        <Button
+          onClick={() => dispatch(decrementByValue(isNum))}
+          disableElevation
+          variant="contained"
+          startIcon={<Remove />}
+        >
+          Decrement by {isNum}
+        </Button>
+      </ButtonGroup>
+    </Box>
   );
 }
