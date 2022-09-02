@@ -1,10 +1,9 @@
 import React from "react";
-import Counter from "./features/counters/Counter";
 
 function App() {
   return (
     <React.Fragment>
-      <Counter />
+      <h1>Hello</h1>
     </React.Fragment>
   );
 }
